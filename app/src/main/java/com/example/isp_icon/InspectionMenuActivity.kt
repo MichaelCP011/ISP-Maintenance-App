@@ -53,13 +53,14 @@ class InspectionMenuActivity : AppCompatActivity() {
 
         rv.adapter = CategoryAdapter(categories) { selectedCategory ->
             // AKSI SAAT KATEGORI DIKLIK
-            Toast.makeText(this, "Buka form: $selectedCategory", Toast.LENGTH_SHORT).show()
 
-            // Nanti kita arahkan ke DynamicFormActivity di sini
-            // val intent = Intent(this, DynamicFormActivity::class.java)
-            // intent.putExtra("SESSION_DATA", session)
-            // intent.putExtra("CATEGORY_NAME", selectedCategory)
-            // startActivity(intent)
+            val intent = Intent(this, DynamicFormActivity::class.java)
+            // Bawa data Session (No WO, Lokasi, dll)
+            intent.putExtra("SESSION_DATA", session)
+            // Bawa nama kategori yang dipilih (Genset/AC/dll)
+            intent.putExtra("CATEGORY_NAME", selectedCategory)
+
+            startActivity(intent)
         }
     }
 }

@@ -35,4 +35,10 @@ interface ApiService {
     fun getMasterSoal(
         @Query("action") action: String = "get_soal"
     ): Call<MasterResponse<PertanyaanEntity>>
+
+    @POST("exec")
+    fun submitInspection(
+        @Query("action") action: String = "create_inspeksi", // Sesuai logik di masa depan, tapi GAS kita handle di doPost langsung
+        @Body request: InspectionRequest
+    ): Call<MaintenanceResponse>
 }

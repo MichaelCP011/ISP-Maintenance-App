@@ -16,6 +16,9 @@
         android:theme="@style/Theme.ISP_ICON"
         tools:targetApi="31">
         <activity
+            android:name=".DynamicFormActivity"
+            android:exported="false" />
+        <activity
             android:name=".InspectionMenuActivity"
             android:exported="false" />
         <activity
