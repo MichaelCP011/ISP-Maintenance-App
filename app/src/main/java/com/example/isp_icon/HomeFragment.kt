@@ -24,7 +24,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // Menu Monitoring
         view.findViewById<CardView>(R.id.menuMonitoring).setOnClickListener {
             // Gunakan 'requireContext()' untuk Toast
-            Toast.makeText(requireContext(), "Fitur Monitoring akan segera hadir!", Toast.LENGTH_SHORT).show()
+            // Gunakan 'requireContext()' atau 'requireActivity()' sebagai pengganti 'this'
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(intent)
         }
     }
 }
