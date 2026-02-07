@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="purple_500">#FF6200EE</color> <color name="primary_blue">#304FFE</color> <color name="bg_blue_light">#E8EAF6</color> <color name="bg_green_light">#E8F5E9</color> <color name="bg_orange_light">#FFF3E0</color> <color name="icon_blue">#1A237E</color>
+    <color name="icon_green">#1B5E20</color>
+    <color name="icon_orange">#E65100</color>
+    <color name="text_dark">#212121</color>
+    <color name="text_grey">#757575</color>
+    <color name="whicce">#55CEFC</color>
 </resources>

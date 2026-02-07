@@ -1,17 +1,15 @@
 package com.example.isp_icon
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.lifecycle.lifecycleScope // Pastikan ini ada
+import androidx.lifecycle.lifecycleScope
 import com.example.isp_icon.data.AppDatabase
-import com.example.isp_icon.data.LokasiEntity
-import com.example.isp_icon.data.PersonilEntity
-import com.example.isp_icon.data.PertanyaanEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,124 +17,86 @@ import retrofit2.awaitResponse
 
 class HomeActivity : AppCompatActivity() {
 
+    // View Indikator Status
+    private lateinit var cvStatusIndicator: CardView
+    private lateinit var tvStatusText: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // Menu Navigasi
+        // Inisialisasi View Indikator
+        cvStatusIndicator = findViewById(R.id.cvStatusIndicator)
+        tvStatusText = findViewById(R.id.tvStatusText)
+
+        // 1. Menu Navigasi: Checklist
         findViewById<CardView>(R.id.menuChecklist).setOnClickListener {
             startActivity(Intent(this, InspectionHeaderActivity::class.java))
         }
 
+        // 2. Menu Navigasi: Monitoring
         findViewById<CardView>(R.id.menuMonitoring).setOnClickListener {
-            // Arahkan ke monitoring
-            Toast.makeText(this, "Menu Monitoring dipilih", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Fitur Monitoring akan segera hadir!", Toast.LENGTH_SHORT).show()
         }
 
-        // Logic Tombol Sync
-        findViewById<Button>(R.id.btnSync).setOnClickListener {
-            lakukanSyncData()
-        }
+        // 3. JALANKAN AUTO SYNC SAAT APLIKASI DIBUKA
+        lakukanAutoSync()
     }
 
-    private fun lakukanSyncData() {
-        val btnSync = findViewById<Button>(R.id.btnSync)
-        val originalText = btnSync.text.toString()
-        btnSync.text = "Loading..."
-        btnSync.isEnabled = false
+    private fun updateStatusIndicator(colorCode: String, message: String) {
+        // Fungsi helper untuk ubah warna indikator
+        cvStatusIndicator.setCardBackgroundColor(Color.parseColor(colorCode))
+        tvStatusText.text = message
+    }
+
+    private fun lakukanAutoSync() {
+        // Set Status: SEDANG SYNC (Biru)
+        updateStatusIndicator("#2979FF", "Syncing...") // Biru Material Design
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                Log.d("DEBUG_SYNC", "=== MULAI SYNC DATA ===")
+                Log.d("DEBUG_SYNC", "=== AUTO SYNC STARTED ===")
                 val db = AppDatabase.getDatabase(applicationContext)
                 val api = ApiClient.instance
 
-                // ------------------------------------------------------
-                // 1. SYNC LOKASI
-                // ------------------------------------------------------
-                Log.d("DEBUG_SYNC", "1. Download Master Lokasi...")
+                // 1. Download LOKASI
                 val resLokasi = api.getMasterLokasi().awaitResponse()
-
                 if (resLokasi.isSuccessful) {
                     val rawData = resLokasi.body()?.data ?: emptyList()
-                    // Filter: Hapus yang id_site kosong
                     val cleanData = rawData.filter { !it.idSite.isNullOrEmpty() }
-
-                    if (cleanData.isNotEmpty()) {
-                        db.appDao().insertLokasi(cleanData)
-                        Log.d("DEBUG_SYNC", "   -> Sukses simpan ${cleanData.size} Lokasi")
-                    } else {
-                        Log.e("DEBUG_SYNC", "   -> GAGAL: Data Lokasi kosong atau nama kolom 'id_site' di sheet salah!")
-                    }
-                } else {
-                    Log.e("DEBUG_SYNC", "   -> Error API Lokasi: ${resLokasi.code()}")
+                    if (cleanData.isNotEmpty()) db.appDao().insertLokasi(cleanData)
                 }
 
-                // ------------------------------------------------------
-                // 2. SYNC PERSONIL
-                // ------------------------------------------------------
-                Log.d("DEBUG_SYNC", "2. Download Master Personil...")
+                // 2. Download PERSONIL
                 val resPersonil = api.getMasterPersonil().awaitResponse()
-
                 if (resPersonil.isSuccessful) {
                     val rawData = resPersonil.body()?.data ?: emptyList()
-                    // Filter: Hapus yang nama_lengkap kosong
                     val cleanData = rawData.filter { !it.namaLengkap.isNullOrEmpty() }
-
-                    if (cleanData.isNotEmpty()) {
-                        db.appDao().insertPersonil(cleanData)
-                        Log.d("DEBUG_SYNC", "   -> Sukses simpan ${cleanData.size} Personil")
-                    } else {
-                        Log.e("DEBUG_SYNC", "   -> GAGAL: Data Personil kosong. Cek header sheet 'Master_Personil' harus 'nama_lengkap'")
-                    }
-                } else {
-                    Log.e("DEBUG_SYNC", "   -> Error API Personil: ${resPersonil.code()}")
+                    if (cleanData.isNotEmpty()) db.appDao().insertPersonil(cleanData)
                 }
 
-                // ------------------------------------------------------
-                // 3. SYNC PERTANYAAN (SOAL)
-                // ------------------------------------------------------
-                Log.d("DEBUG_SYNC", "3. Download Config Pertanyaan...")
+                // 3. Download PERTANYAAN
                 val resSoal = api.getMasterSoal().awaitResponse()
-
                 if (resSoal.isSuccessful) {
                     val rawData = resSoal.body()?.data ?: emptyList()
-                    // Filter: Hapus yang id_pertanyaan kosong
                     val cleanData = rawData.filter { !it.idPertanyaan.isNullOrEmpty() }
-
-                    if (cleanData.isNotEmpty()) {
-                        db.appDao().insertPertanyaan(cleanData)
-                        Log.d("DEBUG_SYNC", "   -> Sukses simpan ${cleanData.size} Pertanyaan")
-                    } else {
-                        Log.e("DEBUG_SYNC", "   -> GAGAL: Data Soal kosong. Cek header sheet 'Config_Pertanyaan' harus 'id_pertanyaan'")
-                    }
-                } else {
-                    Log.e("DEBUG_SYNC", "   -> Error API Soal: ${resSoal.code()}")
+                    if (cleanData.isNotEmpty()) db.appDao().insertPertanyaan(cleanData)
                 }
 
-                // ------------------------------------------------------
-                // FINAL CHECK
-                // ------------------------------------------------------
-                val countLokasi = db.appDao().getAllLokasi().size
-                val countPersonil = db.appDao().getAllPersonil().size
-                // (Optional) Buat fungsi countPertanyaan di DAO jika mau cek jumlahnya juga
-
-                Log.d("DEBUG_SYNC", "=== SELESAI ===")
-                Log.d("DEBUG_SYNC", "Total di Database HP -> Lokasi: $countLokasi, Personil: $countPersonil")
-
+                // Update UI: SUKSES (Hijau)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@HomeActivity, "Sync Selesai! Lokasi: $countLokasi, Personil: $countPersonil", Toast.LENGTH_LONG).show()
-                    btnSync.text = originalText
-                    btnSync.isEnabled = true
+                    updateStatusIndicator("#00E676", "Online & Updated") // Hijau Terang
+                    Log.d("DEBUG_SYNC", "Sync Selesai & Sukses")
                 }
 
             } catch (e: Exception) {
-                Log.e("DEBUG_SYNC", "CRITICAL ERROR: ${e.message}")
-                e.printStackTrace()
+                Log.e("DEBUG_SYNC", "Sync Gagal: ${e.message}")
+
+                // Update UI: GAGAL (Merah)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@HomeActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-                    btnSync.text = originalText
-                    btnSync.isEnabled = true
+                    updateStatusIndicator("#FF1744", "Offline / Error") // Merah Terang
+                    // Kita tidak tampilkan Toast error agar tidak mengganggu user saat buka aplikasi,
+                    // cukup indikator merah saja.
                 }
             }
         }
