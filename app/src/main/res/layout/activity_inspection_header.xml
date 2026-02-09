@@ -5,181 +5,99 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5">
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#2196F3"
-        android:padding="20dp"
-        android:text="Data Inspeksi Baru"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle">
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
+            <TextView android:text="Nomor WO" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:contentPadding="16dp">
+                android:layout_marginTop="4dp"
+                app:helperText="Format: ICON+/PM/87613"
+                app:helperTextTextColor="#1976D2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNoWo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:hint="Masukkan No WO dari FSM+/ICRM"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Pilih Lokasi ISP / Site"
-                        android:textStyle="bold"/>
-
-                    <Spinner
-                        android:id="@+id/spLokasi"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@android:drawable/btn_dropdown" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tipe POP"
-                        android:layout_marginTop="8dp"
-                        android:textSize="12sp"/>
-
-                    <TextView
-                        android:id="@+id/tvTipePop"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="-"
-                        android:textStyle="bold"
-                        android:textColor="#000"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
+            <TextView android:text="Tanggal Pelaksanaan" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <EditText
+                android:id="@+id/etTanggal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:contentPadding="16dp">
+                android:inputType="date"
+                android:background="@android:drawable/edit_text"
+                android:padding="12dp"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Nomor WO"
-                        android:textSize="12sp"/>
-
-                    <EditText
-                        android:id="@+id/etNoWo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Masukkan No WO"
-                        android:inputType="text" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tanggal"
-                        android:textSize="12sp"
-                        android:layout_marginTop="8dp"/>
-
-                    <EditText
-                        android:id="@+id/etTanggal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:inputType="date"
-                        android:text="2026-02-06" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Area"
-                        android:textSize="12sp"
-                        android:layout_marginTop="8dp"/>
-
-                    <Spinner
-                        android:id="@+id/spArea"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
+            <TextView android:text="Nama Site (Cari)" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardCornerRadius="8dp"
-                app:contentPadding="16dp">
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-                <LinearLayout
+                <AutoCompleteTextView
+                    android:id="@+id/acNamaSite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:hint="Ketik nama site..."
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Pelaksana"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp"/>
-                    <Spinner android:id="@+id/spPelaksana" android:layout_width="match_parent" android:layout_height="45dp"/>
+            <TextView android:text="Tipe POP" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgTipePop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+            </com.google.android.material.chip.ChipGroup>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Pemeriksa"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp"/>
-                    <Spinner android:id="@+id/spPemeriksa" android:layout_width="match_parent" android:layout_height="45dp"/>
+            <TextView android:text="Model Bangunan" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgModelBangunan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Asman"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp"/>
-                    <Spinner android:id="@+id/spAsman" android:layout_width="match_parent" android:layout_height="45dp"/>
+            <TextView android:text="Pelaksana" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <Spinner android:id="@+id/spPelaksana" android:layout_width="match_parent" android:layout_height="50dp" android:background="@android:drawable/btn_dropdown"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Manajer"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp"/>
-                    <Spinner android:id="@+id/spManajer" android:layout_width="match_parent" android:layout_height="45dp"/>
+            <TextView android:text="Pemeriksa" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <Spinner android:id="@+id/spPemeriksa" android:layout_width="match_parent" android:layout_height="50dp" android:background="@android:drawable/btn_dropdown"/>
 
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            <TextView android:text="Asman" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <Spinner android:id="@+id/spAsman" android:layout_width="match_parent" android:layout_height="50dp" android:background="@android:drawable/btn_dropdown"/>
+
+            <TextView android:text="Manajer" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <Spinner android:id="@+id/spManajer" android:layout_width="match_parent" android:layout_height="50dp" android:background="@android:drawable/btn_dropdown"/>
+
+            <TextView android:text="Area" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"/>
 
             <Button
                 android:id="@+id/btnLanjut"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="LANJUT KE PENGECEKAN"
-                android:backgroundTint="#4CAF50"
-                android:textStyle="bold" />
+                android:layout_marginTop="24dp"
+                android:text="LANJUT"
+                android:backgroundTint="#4CAF50"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

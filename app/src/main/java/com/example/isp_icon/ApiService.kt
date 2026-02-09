@@ -1,5 +1,6 @@
 package com.example.isp_icon
 
+import com.example.isp_icon.data.HeaderOptionEntity
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -41,4 +42,9 @@ interface ApiService {
         @Query("action") action: String = "create_inspeksi", // Sesuai logik di masa depan, tapi GAS kita handle di doPost langsung
         @Body request: InspectionRequest
     ): Call<MaintenanceResponse>
+
+    @GET("exec")
+    fun getHeaderData(
+        @Query("action") action: String = "get_header_data"
+    ): Call<MasterResponse<HeaderOptionEntity>>
 }

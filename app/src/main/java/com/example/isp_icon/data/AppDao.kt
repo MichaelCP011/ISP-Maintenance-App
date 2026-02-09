@@ -36,4 +36,14 @@ interface AppDao {
     // Hapus semua data (opsional, untuk reset)
     @Query("DELETE FROM tabel_pertanyaan")
     suspend fun clearPertanyaan()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertHeaderOptions(list: List<HeaderOptionEntity>)
+
+    @Query("DELETE FROM tabel_opsi_header")
+    suspend fun clearHeaderOptions()
+
+    // Ambil data berdasarkan kategori (misal: ambil semua 'nama_site')
+    @Query("SELECT nilai FROM tabel_opsi_header WHERE kategori = :kategoriTarget ORDER BY nilai ASC")
+    suspend fun getOptionsByCategory(kategoriTarget: String): List<String>
 }

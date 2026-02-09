@@ -1,160 +1,123 @@
 package com.example.isp_icon
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.isp_icon.data.AppDatabase
-import com.example.isp_icon.data.LokasiEntity
-import com.example.isp_icon.data.PersonilEntity
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class InspectionHeaderActivity : AppCompatActivity() {
 
-    // Variabel Penampung Data
-    private var listLokasi = listOf<LokasiEntity>()
-    private var selectedLokasi: LokasiEntity? = null
-
     // View
-    private lateinit var spLokasi: Spinner
-    private lateinit var tvTipePop: TextView
     private lateinit var etNoWo: EditText
     private lateinit var etTanggal: EditText
+    private lateinit var acNamaSite: AutoCompleteTextView
+    private lateinit var cgTipePop: ChipGroup
+    private lateinit var cgModelBangunan: ChipGroup
     private lateinit var spPelaksana: Spinner
     private lateinit var spPemeriksa: Spinner
     private lateinit var spAsman: Spinner
     private lateinit var spManajer: Spinner
-    private lateinit var spArea: Spinner
+    private lateinit var cgArea: ChipGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inspection_header)
 
-        // 1. Inisialisasi View
-        spLokasi = findViewById(R.id.spLokasi)
-        tvTipePop = findViewById(R.id.tvTipePop)
+        // Inisialisasi View
         etNoWo = findViewById(R.id.etNoWo)
         etTanggal = findViewById(R.id.etTanggal)
+        acNamaSite = findViewById(R.id.acNamaSite)
+        cgTipePop = findViewById(R.id.cgTipePop)
+        cgModelBangunan = findViewById(R.id.cgModelBangunan)
         spPelaksana = findViewById(R.id.spPelaksana)
         spPemeriksa = findViewById(R.id.spPemeriksa)
         spAsman = findViewById(R.id.spAsman)
         spManajer = findViewById(R.id.spManajer)
-        spArea = findViewById(R.id.spArea)
+        cgArea = findViewById(R.id.cgArea)
 
-        // Set Tanggal Hari Ini
-        val today = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
-        etTanggal.setText(today)
+        // Load Data
+        populateFormFromDB()
 
-        // Setup Area (Hardcoded atau dari DB kalau mau)
-        val listArea = listOf("Jakarta Barat", "Jakarta Pusat", "Tangerang", "Banten")
-        spArea.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listArea)
-
-        // 2. Load Data dari Database Lokal
-        loadDataFromDB()
-
-        // 3. Tombol Lanjut
         findViewById<Button>(R.id.btnLanjut).setOnClickListener {
-            validasiDanLanjut()
+            // Validasi & Pindah (Logicnya bisa copy dari yang lama, sesuaikan view baru)
+            lanjutKeMenu()
         }
     }
 
-    private fun loadDataFromDB() {
+    private fun populateFormFromDB() {
         lifecycleScope.launch(Dispatchers.IO) {
             val db = AppDatabase.getDatabase(applicationContext)
+            val dao = db.appDao()
 
-            // Ambil Data
-            listLokasi = db.appDao().getAllLokasi()
-            val listPersonil = db.appDao().getAllPersonil()
+            // 1. Ambil data per kategori dari tabel baru
+            val sites = dao.getOptionsByCategory("nama_site")
+            val tipePop = dao.getOptionsByCategory("tipe_pop")
+            val model = dao.getOptionsByCategory("model_bangunan")
+            val pelaksana = dao.getOptionsByCategory("pelaksana")
+            val pemeriksa = dao.getOptionsByCategory("pemeriksa")
+            val asman = dao.getOptionsByCategory("asman")
+            val manajer = dao.getOptionsByCategory("manajer")
+            val area = dao.getOptionsByCategory("area")
 
-            // Update UI di Main Thread
             withContext(Dispatchers.Main) {
-                setupSpinnerLokasi()
-                setupSpinnerPersonil(listPersonil)
+                // Setup Searchable Site
+                val siteAdapter = ArrayAdapter(this@InspectionHeaderActivity, android.R.layout.simple_dropdown_item_1line, sites)
+                acNamaSite.setAdapter(siteAdapter)
+
+                // Setup Chips (Box Selection)
+                fillChipGroup(cgTipePop, tipePop)
+                fillChipGroup(cgModelBangunan, model)
+                fillChipGroup(cgArea, area)
+
+                // Setup Spinners
+                fillSpinner(spPelaksana, pelaksana)
+                fillSpinner(spPemeriksa, pemeriksa)
+                fillSpinner(spAsman, asman)
+                fillSpinner(spManajer, manajer)
             }
         }
     }
 
-    private fun setupSpinnerLokasi() {
-        // Kita hanya tampilkan Nama Site di Dropdown
-        val namaLokasiList = listLokasi.map { it.namaSite ?: "Tanpa Nama" }
-
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, namaLokasiList)
-        spLokasi.adapter = adapter
-
-        // Listener saat lokasi dipilih
-        spLokasi.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                selectedLokasi = listLokasi[position]
-                // Otomatis isi Tipe POP
-                tvTipePop.text = selectedLokasi?.tipe ?: "-"
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+    private fun fillChipGroup(group: ChipGroup, items: List<String>) {
+        group.removeAllViews()
+        for (item in items) {
+            val chip = Chip(this)
+            chip.text = item
+            chip.isCheckable = true
+            chip.isClickable = true
+            // Style agar terlihat seperti kotak pilihan
+            chip.setChipBackgroundColorResource(android.R.color.white)
+            chip.chipStrokeWidth = 2f
+            chip.chipStrokeColor = ColorStateList.valueOf(Color.parseColor("#2196F3")) // Ganti warna sesuai tema
+            group.addView(chip)
         }
     }
 
-    private fun setupSpinnerPersonil(listAll: List<PersonilEntity>) {
-        // Helper function buat filter & pasang adapter
-        fun setAdapter(spinner: Spinner, jabatanFilter: String) {
-            // Filter: Cari yang jabatannya mengandung kata kunci (Case insensitive)
-            // Atau tampilkan semua kalau datanya belum ada jabatan spesifik
-            val filtered = listAll.filter {
-                it.jabatan?.contains(jabatanFilter, ignoreCase = true) == true
-            }.map { it.namaLengkap }
-
-            // Fallback: Jika tidak ada yang cocok, tampilkan semua nama
-            val finalData = if (filtered.isNotEmpty()) filtered else listAll.map { it.namaLengkap }
-
-            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, finalData)
-            spinner.adapter = adapter
-        }
-
-        // Pasang ke masing-masing Spinner
-        setAdapter(spPelaksana, "Pelaksana")
-        setAdapter(spPemeriksa, "Pemeriksa")
-        setAdapter(spAsman, "Asman")
-        setAdapter(spManajer, "Manajer")
+    private fun fillSpinner(spinner: Spinner, items: List<String>) {
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
+        spinner.adapter = adapter
     }
 
-    private fun validasiDanLanjut() {
-        val noWo = etNoWo.text.toString()
-        if (noWo.isEmpty()) {
-            etNoWo.error = "Wajib Diisi!"
-            return
-        }
-        if (selectedLokasi == null) {
-            Toast.makeText(this, "Lokasi belum dimuat", Toast.LENGTH_SHORT).show()
-            return
-        }
+    private fun lanjutKeMenu() {
+        // Logic validasi dan Intent (sesuaikan dengan cara ambil data dari Chip)
+        // Cara ambil data Chip:
+        // val selectedChipId = cgTipePop.checkedChipId
+        // val tipePop = if (selectedChipId != -1) findViewById<Chip>(selectedChipId).text.toString() else ""
 
-        val session = InspectionSession(
-            noWo = noWo,
-            tanggal = etTanggal.text.toString(),
-            idSite = selectedLokasi!!.idSite,
-            namaSite = selectedLokasi!!.namaSite ?: "",
-            tipePop = selectedLokasi!!.tipe ?: "",
-            pelaksana = spPelaksana.selectedItem.toString(),
-            pemeriksa = spPemeriksa.selectedItem.toString(),
-            asman = spAsman.selectedItem.toString(),
-            manajer = spManajer.selectedItem.toString(),
-            area = spArea.selectedItem.toString()
-        )
-
-        // PINDAH HALAMAN
-        val intent = Intent(this, InspectionMenuActivity::class.java)
-        intent.putExtra("SESSION_DATA", session)
-        startActivity(intent)
+        Toast.makeText(this, "Simulasi Lanjut...", Toast.LENGTH_SHORT).show()
     }
 }

@@ -19,7 +19,6 @@ class CategoryAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // Gunakan layout baru: item_checklist
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_checklist, parent, false)
         return ViewHolder(view)
@@ -38,23 +37,21 @@ class CategoryAdapter(
             "ac" -> R.drawable.ac
             "grounding" -> R.drawable.grounding
             "kwh meter" -> R.drawable.kwh
-            "checklist" -> R.drawable.ceklis // atau ceklistt
+            "checklist" -> R.drawable.ceklis
             "rectifier" -> R.drawable.rectifier
             "inverter" -> R.drawable.inverter
             "batere" -> R.drawable.batere
             "room layout" -> R.drawable.roomlayout
             "sld" -> R.drawable.sld
-            else -> R.drawable.ceklistt // Ikon default jika tidak ada yg cocok
+            else -> R.drawable.ceklistt
         }
 
-        // Pasang ikon, tapi cek dulu biar ga crash kalau gambar belum ada
         try {
             holder.ivIcon.setImageResource(iconRes)
         } catch (e: Exception) {
-            holder.ivIcon.setImageResource(R.drawable.ceklistt) // Fallback aman
+            holder.ivIcon.setImageResource(R.drawable.ceklistt)
         }
 
-        // Klik
         holder.itemView.setOnClickListener {
             onClick(categoryName)
         }

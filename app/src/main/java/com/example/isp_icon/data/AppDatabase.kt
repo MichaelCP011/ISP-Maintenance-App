@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [LokasiEntity::class, PersonilEntity::class, PertanyaanEntity::class],
-    version = 1,
+    entities = [LokasiEntity::class, PersonilEntity::class, PertanyaanEntity::class, HeaderOptionEntity::class], // <--- Tambah HeaderOptionEntity
+    version = 2, // <--- NAIKKAN VERSI JADI 2 (PENTING!)
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

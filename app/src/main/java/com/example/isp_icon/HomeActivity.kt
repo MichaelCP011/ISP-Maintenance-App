@@ -83,6 +83,17 @@ class HomeActivity : AppCompatActivity() {
                     if (cleanData.isNotEmpty()) db.appDao().insertPertanyaan(cleanData)
                 }
 
+                // 4. Download HEADER DATA (Site, Personil, dll)
+                val resHeader = api.getHeaderData().awaitResponse()
+                if (resHeader.isSuccessful) {
+                    val data = resHeader.body()?.data ?: emptyList()
+                    if (data.isNotEmpty()) {
+                        db.appDao().clearHeaderOptions() // Bersihkan yg lama
+                        db.appDao().insertHeaderOptions(data)
+                        Log.d("DEBUG_SYNC", "Sukses simpan ${data.size} Opsi Header")
+                    }
+                }
+
                 // Update UI: SUKSES (Hijau)
                 withContext(Dispatchers.Main) {
                     updateStatusIndicator("#00E676", "Online & Updated") // Hijau Terang
