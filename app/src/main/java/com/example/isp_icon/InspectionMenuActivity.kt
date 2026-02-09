@@ -3,7 +3,6 @@ package com.example.isp_icon
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,16 +20,21 @@ class InspectionMenuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inspection_menu)
 
-        // 1. Ambil Data Session (Data dari halaman sebelumnya)
+        // 1. Ambil Data Session
         @Suppress("DEPRECATION")
         session = intent.getParcelableExtra("SESSION_DATA") ?: return
 
-        // 2. Tampilkan Info Header (Perbaikan Error di sini)
-        // Kita gunakan ID 'tvSiteName' yang ada di XML baru
+        // 2. Tampilkan Info Header
         val tvSiteInfo = findViewById<TextView>(R.id.tvSiteName)
-        tvSiteInfo.text = "Site: ${session.namaSite} | WO: ${session.noWo}"
+        tvSiteInfo.text = "Site: ${session.namaSite}\nWO: ${session.noWo}"
 
-        // 3. Load Kategori dari Database
+        // 3. Load Data Pertama Kali
+        loadCategories()
+    }
+
+    // PENTING: Panggil loadCategories lagi saat kembali dari form (agar ceklis muncul)
+    override fun onResume() {
+        super.onResume()
         loadCategories()
     }
 
@@ -38,23 +42,26 @@ class InspectionMenuActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val db = AppDatabase.getDatabase(applicationContext)
 
-            // Query kategori unik dari tabel pertanyaan
+            // A. Ambil Daftar Kategori Unik (Genset, AC, dll)
             val categories = db.appDao().getAllKategori()
 
+            // B. Ambil Daftar Kategori yang SUDAH SELESAI dikerjakan untuk No WO ini
+            // Pastikan kamu sudah update AppDao di Tahap 2 sebelumnya!
+            val completedList = db.appDao().getCompletedCategories(session.noWo)
+
             withContext(Dispatchers.Main) {
-                setupRecyclerView(categories)
+                setupRecyclerView(categories, completedList)
             }
         }
     }
 
-    private fun setupRecyclerView(categories: List<String>) {
+    private fun setupRecyclerView(categories: List<String>, completedList: List<String>) {
         val rv = findViewById<RecyclerView>(R.id.rvCategories)
-
-        // Gunakan LinearLayoutManager untuk list vertikal (sesuai desain baru)
         rv.layoutManager = LinearLayoutManager(this)
 
-        rv.adapter = CategoryAdapter(categories) { selectedCategory ->
-            // Aksi saat item diklik -> Buka Form Dinamis
+        // Masukkan completedList ke Adapter
+        rv.adapter = CategoryAdapter(categories, completedList) { selectedCategory ->
+            // Aksi saat item diklik
             val intent = Intent(this, DynamicFormActivity::class.java)
             intent.putExtra("SESSION_DATA", session)
             intent.putExtra("CATEGORY_NAME", selectedCategory)

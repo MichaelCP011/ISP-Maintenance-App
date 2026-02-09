@@ -46,4 +46,10 @@ interface AppDao {
     // Ambil data berdasarkan kategori (misal: ambil semua 'nama_site')
     @Query("SELECT nilai FROM tabel_opsi_header WHERE kategori = :kategoriTarget ORDER BY nilai ASC")
     suspend fun getOptionsByCategory(kategoriTarget: String): List<String>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStatus(status: InspectionStatusEntity)
+
+    @Query("SELECT kategori FROM tabel_status_inspeksi WHERE noWo = :noWo")
+    suspend fun getCompletedCategories(noWo: String): List<String>
 }

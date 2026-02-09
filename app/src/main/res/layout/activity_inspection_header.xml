@@ -31,12 +31,21 @@
                     android:hint="Masukkan No WO dari FSM+/ICRM"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView android:text="Tanggal Pelaksanaan" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView
+                android:text="Tanggal Pelaksanaan"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <EditText
                 android:id="@+id/etTanggal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="date"
+                android:focusable="false"
+                android:clickable="true"
+                android:hint="Klik untuk pilih tanggal"
                 android:background="@android:drawable/edit_text"
                 android:padding="12dp"/>
 

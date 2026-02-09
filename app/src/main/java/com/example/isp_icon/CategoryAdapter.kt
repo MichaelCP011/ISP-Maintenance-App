@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class CategoryAdapter(
     private val categories: List<String>,
+    private val completedList: List<String>, // Parameter Baru: Daftar yg sudah selesai
     private val onClick: (String) -> Unit
 ) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
@@ -16,6 +17,7 @@ class CategoryAdapter(
         val tvName: TextView = view.findViewById(R.id.tvCategoryName)
         val tvDesc: TextView = view.findViewById(R.id.tvCategoryDesc)
         val ivIcon: ImageView = view.findViewById(R.id.ivCategoryIcon)
+        val ivCheck: ImageView = view.findViewById(R.id.ivCheckStatus) // Referensi Ikon Ceklis
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,16 +30,15 @@ class CategoryAdapter(
         val categoryName = categories[position]
 
         holder.tvName.text = categoryName
-        holder.tvDesc.text = "Formulir pendataan $categoryName" // Deskripsi otomatis
+        holder.tvDesc.text = "Formulir pendataan $categoryName"
 
-        // LOGIC PILIH IKON BERDASARKAN NAMA KATEGORI
-        // Pastikan nama file drawable di sini SAMA dengan yang ada di folder res/drawable kamu
-        val iconRes = when (categoryName.lowercase()) {
+        // --- LOGIC IKON KATEGORI ---
+        val iconRes = when (categoryName.lowercase().trim()) {
             "genset" -> R.drawable.genset
             "ac" -> R.drawable.ac
             "grounding" -> R.drawable.grounding
             "kwh meter" -> R.drawable.kwh
-            "checklist" -> R.drawable.ceklis
+            "checklist" -> R.drawable.ceklis // Pastikan nama file drawable benar
             "rectifier" -> R.drawable.rectifier
             "inverter" -> R.drawable.inverter
             "batere" -> R.drawable.batere
@@ -50,6 +51,19 @@ class CategoryAdapter(
             holder.ivIcon.setImageResource(iconRes)
         } catch (e: Exception) {
             holder.ivIcon.setImageResource(R.drawable.ceklistt)
+        }
+
+        // --- LOGIC CEKLIS HIJAU (Status Selesai) ---
+        // Cek apakah kategori ini ada di dalam database status
+        if (completedList.contains(categoryName)) {
+            holder.ivCheck.visibility = View.VISIBLE
+            // Opsional: Ubah teks deskripsi
+            holder.tvDesc.text = "Selesai dikerjakan"
+            holder.tvDesc.setTextColor(android.graphics.Color.parseColor("#4CAF50"))
+        } else {
+            holder.ivCheck.visibility = View.GONE
+            holder.tvDesc.text = "Formulir pendataan $categoryName"
+            holder.tvDesc.setTextColor(android.graphics.Color.parseColor("#757575"))
         }
 
         holder.itemView.setOnClickListener {
