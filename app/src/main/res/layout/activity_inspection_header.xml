@@ -1,113 +1,318 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#F3F4F6"
+    android:fillViewport="true">
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_marginBottom="32dp">
 
-            <TextView android:text="Nomor WO" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                app:helperText="Format: ICON+/PM/87613"
-                app:helperTextTextColor="#1976D2"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNoWo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Masukkan No WO dari FSM+/ICRM"/>
-            </com.google.android.material.textfield.TextInputLayout>
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/gradient_background"
+                android:padding="13dp"
+                android:src="@drawable/ceklistt"
+                app:tint="@android:color/white" />
 
             <TextView
-                android:text="Tanggal Pelaksanaan"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
+
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <EditText
-                android:id="@+id/etTanggal"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="date"
-                android:focusable="false"
-                android:clickable="true"
-                android:hint="Klik untuk pilih tanggal"
-                android:background="@android:drawable/edit_text"
-                android:padding="12dp"/>
+                android:layout_marginTop="9dp"
+                android:text="Form Isi Data"
+                android:textColor="#4F46E5"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
 
-            <TextView android:text="Nama Site (Cari)" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-                <AutoCompleteTextView
-                    android:id="@+id/acNamaSite"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Ketik nama site..."
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView android:text="Tipe POP" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/cgTipePop"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:singleSelection="true"
-                app:selectionRequired="true">
-            </com.google.android.material.chip.ChipGroup>
-
-            <TextView android:text="Model Bangunan" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/cgModelBangunan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:singleSelection="true"
-                app:selectionRequired="true"/>
-
-            <TextView android:text="Pelaksana" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <Spinner android:id="@+id/spPelaksana" android:layout_width="match_parent" android:layout_height="50dp" android:background="@android:drawable/btn_dropdown"/>
-
-            <TextView android:text="Pemeriksa" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <Spinner android:id="@+id/spPemeriksa" android:layout_width="match_parent" android:layout_height="50dp" android:background="@android:drawable/btn_dropdown"/>
-
-            <TextView android:text="Asman" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <Spinner android:id="@+id/spAsman" android:layout_width="match_parent" android:layout_height="50dp" android:background="@android:drawable/btn_dropdown"/>
-
-            <TextView android:text="Manajer" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <Spinner android:id="@+id/spManajer" android:layout_width="match_parent" android:layout_height="50dp" android:background="@android:drawable/btn_dropdown"/>
-
-            <TextView android:text="Area" android:textStyle="bold" android:layout_marginTop="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/cgArea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:singleSelection="true"
-                app:selectionRequired="true"/>
-
-            <Button
-                android:id="@+id/btnLanjut"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="24dp"
-                android:text="LANJUT"
-                android:backgroundTint="#4CAF50"/>
-
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Lengkapi informasi berikut untuk\nmelanjutkan"
+                android:textColor="#6B7280"
+                android:textSize="14sp" />
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:text="Nomor WO"
+            android:textColor="#374151"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/nomerwo"
+            app:drawableTint="#4F46E5"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_input_selector"
+            android:hint="Masukkan nomor WO"
+            android:inputType="text"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:text="Tanggal Pelaksanaan"
+            android:textColor="#374151"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/calender"
+            app:drawableTint="#4F46E5"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_input_selector"
+            android:drawableEnd="@drawable/calenderkecil"
+            android:drawableTint="#374151"
+            android:focusable="false"
+            android:text="06/02/2026"
+            android:inputType="date"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:text="Nama Site"
+            android:textColor="#374151"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/map"
+            app:drawableTint="#4F46E5"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_input_selector"
+            android:hint="Ketik untuk mencari site"
+            android:inputType="text"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:text="Tipe POP"
+            android:textColor="#374151"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/pop"
+            app:drawableTint="#4F46E5" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupPop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:selectionRequired="true"
+            app:singleSelection="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:text="Model Bangunan"
+            android:textColor="#374151"
+            android:textSize="14sp"
+            android:layout_marginTop="20dp"
+            app:drawableStartCompat="@drawable/building"
+            app:drawableTint="#4F46E5" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupBangunan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:selectionRequired="true"
+            app:singleSelection="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:text="Pelaksana"
+            android:textColor="#374151"
+            android:textSize="14sp"
+            android:layout_marginTop="20dp"
+            app:drawableStartCompat="@drawable/pelaksana"
+            app:drawableTint="#4F46E5" />
+
+        <AutoCompleteTextView
+            android:id="@+id/inputPelaksana"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+
+            android:background="@drawable/bg_input_selector"
+            android:hint="Pilih Pelaksana"
+            android:textColorHint="#9CA3AF"
+            android:textSize="14sp"
+
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:drawableEnd="@drawable/arrowend"
+            android:drawableTint="#6B7280"
+            android:paddingEnd="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:text="Pemeriksa"
+            android:textColor="#374151"
+            android:textSize="14sp"
+            android:layout_marginTop="20dp"
+            app:drawableStartCompat="@drawable/pemeriksa"
+            app:drawableTint="#4F46E5" />
+
+        <AutoCompleteTextView
+            android:id="@+id/inputPemeriksa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+
+            android:background="@drawable/bg_input_selector"
+            android:hint="Pilih Pemeriksa"
+            android:textColorHint="#9CA3AF"
+            android:textSize="14sp"
+
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:drawableEnd="@drawable/arrowend"
+            android:drawableTint="#6B7280"
+            android:paddingEnd="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:text="Assistant Manager"
+            android:textColor="#374151"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/asmen"
+            app:drawableTint="#4F46E5" />
+
+        <AutoCompleteTextView
+            android:id="@+id/inputAssistantManager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+
+            android:background="@drawable/bg_input_selector"
+            android:hint="Pilih Assistant Manager"
+            android:textColorHint="#9CA3AF"
+            android:textSize="14sp"
+
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:drawableEnd="@drawable/arrowend"
+            android:drawableTint="#6B7280"
+            android:paddingEnd="16dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:text="Manager"
+            android:textColor="#374151"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/manager"
+            app:drawableTint="#4F46E5" />
+
+        <AutoCompleteTextView
+            android:id="@+id/inputManager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+
+            android:background="@drawable/bg_input_selector"
+            android:hint="Pilih Manager"
+            android:textColorHint="#9CA3AF"
+            android:textSize="14sp"
+
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:drawableEnd="@drawable/arrowend"
+            android:drawableTint="#6B7280"
+            android:paddingEnd="16dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:text="Area"
+            android:textColor="#374151"
+            android:textSize="14sp"
+            android:layout_marginTop="20dp"
+            app:drawableStartCompat="@drawable/area"
+            app:drawableTint="#4F46E5" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:selectionRequired="true"
+            app:singleSelection="true"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLanjut"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp"
+            android:text="Lanjut"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+
+
+            app:backgroundTint="@null"
+
+            android:background="@drawable/blue_gradient"
+
+            app:icon="@drawable/ic_check_circle"
+            app:iconGravity="textEnd"
+            app:iconPadding="8dp"
+            app:iconTint="@android:color/white"
+            android:insetTop="0dp"
+            android:insetBottom="0dp" />
+
+    </LinearLayout>
+</ScrollView>
+
