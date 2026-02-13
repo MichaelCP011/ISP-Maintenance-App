@@ -29,7 +29,6 @@
                 app:tint="@android:color/white" />
 
             <TextView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
@@ -59,6 +58,7 @@
             app:drawableTint="#4F46E5"/>
 
         <EditText
+            android:id="@+id/etNoWo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -79,6 +79,7 @@
             app:drawableTint="#4F46E5"/>
 
         <EditText
+            android:id="@+id/etTanggal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -87,6 +88,7 @@
             android:drawableEnd="@drawable/calenderkecil"
             android:drawableTint="#374151"
             android:focusable="false"
+            android:clickable="true"
             android:text="06/02/2026"
             android:inputType="date"
             android:textSize="14sp" />
@@ -101,7 +103,8 @@
             app:drawableStartCompat="@drawable/map"
             app:drawableTint="#4F46E5"/>
 
-        <EditText
+        <AutoCompleteTextView
+            android:id="@+id/acNamaSite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -109,6 +112,7 @@
             android:background="@drawable/bg_input_selector"
             android:hint="Ketik untuk mencari site"
             android:inputType="text"
+            android:completionThreshold="1"
             android:textSize="14sp" />
 
         <TextView
@@ -121,13 +125,18 @@
             app:drawableStartCompat="@drawable/pop"
             app:drawableTint="#4F46E5" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupPop"
+        <EditText
+            android:id="@+id/etTipePop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:selectionRequired="true"
-            app:singleSelection="true"/>
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_input_selector"
+            android:hint="Otomatis terisi"
+            android:focusable="false"
+            android:clickable="false"
+            android:textColor="#6B7280"
+            android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -136,17 +145,21 @@
             android:text="Model Bangunan"
             android:textColor="#374151"
             android:textSize="14sp"
-            android:layout_marginTop="20dp"
             app:drawableStartCompat="@drawable/building"
             app:drawableTint="#4F46E5" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupBangunan"
+        <EditText
+            android:id="@+id/etModelBangunan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:selectionRequired="true"
-            app:singleSelection="true"/>
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_input_selector"
+            android:hint="Otomatis terisi"
+            android:focusable="false"
+            android:clickable="false"
+            android:textColor="#6B7280"
+            android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -155,7 +168,6 @@
             android:text="Pelaksana"
             android:textColor="#374151"
             android:textSize="14sp"
-            android:layout_marginTop="20dp"
             app:drawableStartCompat="@drawable/pelaksana"
             app:drawableTint="#4F46E5" />
 
@@ -164,12 +176,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-
+            android:layout_marginBottom="16dp"
             android:background="@drawable/bg_input_selector"
             android:hint="Pilih Pelaksana"
             android:textColorHint="#9CA3AF"
             android:textSize="14sp"
-
             android:inputType="none"
             android:focusable="false"
             android:clickable="true"
@@ -185,7 +196,6 @@
             android:text="Pemeriksa"
             android:textColor="#374151"
             android:textSize="14sp"
-            android:layout_marginTop="20dp"
             app:drawableStartCompat="@drawable/pemeriksa"
             app:drawableTint="#4F46E5" />
 
@@ -195,12 +205,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
-
             android:background="@drawable/bg_input_selector"
             android:hint="Pilih Pemeriksa"
             android:textColorHint="#9CA3AF"
             android:textSize="14sp"
-
             android:inputType="none"
             android:focusable="false"
             android:clickable="true"
@@ -225,12 +233,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
-
             android:background="@drawable/bg_input_selector"
             android:hint="Pilih Assistant Manager"
             android:textColorHint="#9CA3AF"
             android:textSize="14sp"
-
             android:inputType="none"
             android:focusable="false"
             android:clickable="true"
@@ -238,7 +244,6 @@
             android:drawableEnd="@drawable/arrowend"
             android:drawableTint="#6B7280"
             android:paddingEnd="16dp" />
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -256,12 +261,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
-
             android:background="@drawable/bg_input_selector"
             android:hint="Pilih Manager"
             android:textColorHint="#9CA3AF"
             android:textSize="14sp"
-
             android:inputType="none"
             android:focusable="false"
             android:clickable="true"
@@ -270,7 +273,6 @@
             android:drawableTint="#6B7280"
             android:paddingEnd="16dp" />
 
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -278,17 +280,21 @@
             android:text="Area"
             android:textColor="#374151"
             android:textSize="14sp"
-            android:layout_marginTop="20dp"
             app:drawableStartCompat="@drawable/area"
             app:drawableTint="#4F46E5" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupArea"
+        <EditText
+            android:id="@+id/etArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:selectionRequired="true"
-            app:singleSelection="true"/>
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_input_selector"
+            android:hint="Otomatis terisi"
+            android:focusable="false"
+            android:clickable="false"
+            android:textColor="#6B7280"
+            android:textSize="14sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLanjut"
@@ -300,12 +306,8 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
-
-
             app:backgroundTint="@null"
-
             android:background="@drawable/blue_gradient"
-
             app:icon="@drawable/ic_check_circle"
             app:iconGravity="textEnd"
             app:iconPadding="8dp"
@@ -315,4 +317,3 @@
 
     </LinearLayout>
 </ScrollView>
-

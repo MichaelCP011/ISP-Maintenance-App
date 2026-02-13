@@ -7,6 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 import com.example.isp_icon.data.LokasiEntity
+import com.example.isp_icon.data.MasterSiteEntity
 import com.example.isp_icon.data.PersonilEntity
 import com.example.isp_icon.data.PertanyaanEntity
 
@@ -47,4 +48,9 @@ interface ApiService {
     fun getHeaderData(
         @Query("action") action: String = "get_header_data"
     ): Call<MasterResponse<HeaderOptionEntity>>
+
+    @GET("exec")
+    fun getMasterSite(
+        @Query("action") action: String = "get_master_site"
+    ): Call<MasterResponse<MasterSiteEntity>>
 }

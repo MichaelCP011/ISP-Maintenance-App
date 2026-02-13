@@ -44,6 +44,8 @@ class CategoryAdapter(
             "batere" -> R.drawable.batere
             "room layout" -> R.drawable.roomlayout
             "sld" -> R.drawable.sld
+            "acpdb" -> R.drawable.acpdb
+            "dcpdb" -> R.drawable.dcpdb
             else -> R.drawable.ceklistt
         }
 

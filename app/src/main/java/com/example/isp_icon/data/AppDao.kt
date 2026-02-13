@@ -52,4 +52,19 @@ interface AppDao {
 
     @Query("SELECT kategori FROM tabel_status_inspeksi WHERE noWo = :noWo")
     suspend fun getCompletedCategories(noWo: String): List<String>
+
+    // --- MASTER SITE (AUTOFILL) ---
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMasterSites(sites: List<MasterSiteEntity>)
+
+    @Query("DELETE FROM tabel_master_site")
+    suspend fun clearMasterSites()
+
+    // Cari detail berdasarkan nama site
+    @Query("SELECT * FROM tabel_master_site WHERE namaSite = :targetName")
+    suspend fun getSiteDetail(targetName: String): MasterSiteEntity?
+
+    // Ambil semua nama site untuk Autocomplete
+    @Query("SELECT namaSite FROM tabel_master_site ORDER BY namaSite ASC")
+    suspend fun getAllSiteNames(): List<String>
 }

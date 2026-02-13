@@ -94,6 +94,16 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }
 
+                val resSite = api.getMasterSite().awaitResponse()
+                if (resSite.isSuccessful) {
+                    val data = resSite.body()?.data ?: emptyList()
+                    if (data.isNotEmpty()) {
+                        db.appDao().clearMasterSites() // Hapus data lama
+                        db.appDao().insertMasterSites(data) // Masukkan data baru
+                        Log.d("DEBUG_SYNC", "Sukses simpan ${data.size} Data Site Mapping")
+                    }
+                }
+
                 // Update UI: SUKSES (Hijau)
                 withContext(Dispatchers.Main) {
                     updateStatusIndicator("#00E676", "Online & Updated") // Hijau Terang

@@ -68,7 +68,7 @@
             android:id="@+id/ivCheckStatus"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:src="@drawable/ceklistt"
+            android:src="@drawable/check_circle"
             app:tint="#4CAF50"
             android:visibility="gone"
             android:layout_marginStart="8dp"/>

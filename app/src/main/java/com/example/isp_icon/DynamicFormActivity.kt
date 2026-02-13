@@ -347,7 +347,7 @@ class DynamicFormActivity : AppCompatActivity() {
         val request = InspectionRequest(
             noWo = session.noWo,
             idSite = session.idSite,
-            namaPelaksana = session.pelaksana,
+            namaPelaksana = session.pelaksana ?: "-",
             kategori = categoryName,
             jawaban = mapJawaban
         )
