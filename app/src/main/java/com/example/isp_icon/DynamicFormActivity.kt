@@ -93,19 +93,87 @@ class DynamicFormActivity : AppCompatActivity() {
         llFormContainer.removeAllViews()
         inputViewsMap.clear()
 
-        for (q in questions) {
-            // A. Buat Label Pertanyaan
-            val label = TextView(this)
-            label.text = q.pertanyaan
-            label.textSize = 14f
-            label.setTextColor(Color.DKGRAY)
-            label.setTypeface(null, Typeface.BOLD)
-            label.setPadding(0, 32, 0, 8) // Jarak atas bawah
-            llFormContainer.addView(label)
+        val scale = resources.displayMetrics.density
 
-            // B. Tentukan Tipe Input
+        questions.forEachIndexed { index, q ->
+            val nomorSoal = index + 1
+
+            // ========================================================
+            // 1. BUAT CONTAINER (Kotak Card untuk tiap soal)
+            // ========================================================
+            val cardContainer = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                // Background Putih, Sudut Membulat, Border Abu-abu halus
+                background = android.graphics.drawable.GradientDrawable().apply {
+                    shape = android.graphics.drawable.GradientDrawable.RECTANGLE
+                    setColor(Color.WHITE)
+                    cornerRadius = 24f // Sudut melengkung
+                    setStroke(2, Color.parseColor("#E5E7EB")) // Border abu-abu terang
+                }
+                // Padding dalam kotak
+                setPadding((16 * scale).toInt(), (16 * scale).toInt(), (16 * scale).toInt(), (20 * scale).toInt())
+
+                // Margin antar kotak soal
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(0, 0, 0, (16 * scale).toInt()) // Jarak bawah ke soal berikutnya
+                }
+            }
+
+            // ========================================================
+            // 2. HEADER (Nomor + Teks Pertanyaan)
+            // ========================================================
+            val headerLayout = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.TOP
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    bottomMargin = (16 * scale).toInt() // Jarak antara teks dan tombol/input
+                }
+            }
+
+            // A. Bulatan Nomor
+            val badgeSize = (32 * scale).toInt()
+            val badgeMargin = (12 * scale).toInt()
+            val badgeNumber = TextView(this).apply {
+                text = "$nomorSoal"
+                setTextColor(Color.WHITE)
+                textSize = 14f
+                setTypeface(null, Typeface.BOLD)
+                gravity = Gravity.CENTER
+                background = android.graphics.drawable.GradientDrawable().apply {
+                    shape = android.graphics.drawable.GradientDrawable.OVAL
+                    setColor(Color.parseColor("#3B82F6")) // Biru
+                }
+                layoutParams = LinearLayout.LayoutParams(badgeSize, badgeSize).apply {
+                    marginEnd = badgeMargin
+                }
+            }
+
+            // B. Teks Pertanyaan
+            val labelTeks = TextView(this).apply {
+                text = q.pertanyaan
+                textSize = 15f
+                setTextColor(Color.parseColor("#374151")) // Abu-abu gelap
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    topMargin = (4 * scale).toInt() // Sesuaikan agar sejajar tengah dengan nomor
+                }
+            }
+
+            headerLayout.addView(badgeNumber)
+            headerLayout.addView(labelTeks)
+
+            // ========================================================
+            // 3. TENTUKAN TIPE INPUT
+            // ========================================================
             val inputType = q.tipeInput?.uppercase() ?: "TEKS"
-
             val inputView: View = when (inputType) {
                 "YA_TIDAK" -> createYesNoLayout()
                 "ANGKA" -> createStyledEditText(isNumber = true, hint = "Masukkan Angka")
@@ -114,8 +182,26 @@ class DynamicFormActivity : AppCompatActivity() {
                 else -> createStyledEditText(isNumber = false, hint = "Masukkan Teks")
             }
 
-            // C. Masukkan ke Layar & Map
-            llFormContainer.addView(inputView)
+            // ========================================================
+            // 4. MENSEJAJARKAN INPUT DENGAN TEKS (Bukan dengan nomor)
+            // ========================================================
+            // Hitung jarak margin kiri (Lebar bulatan + marginnya)
+            val indentLeft = badgeSize + badgeMargin
+
+            val inputParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            inputParams.leftMargin = indentLeft // Terapkan indentasi
+            inputView.layoutParams = inputParams
+
+            // ========================================================
+            // 5. RAKIT SEMUA KE DALAM CONTAINER
+            // ========================================================
+            cardContainer.addView(headerLayout)
+            cardContainer.addView(inputView)
+
+            llFormContainer.addView(cardContainer)
             inputViewsMap[q.idPertanyaan] = inputView
         }
     }
@@ -160,57 +246,131 @@ class DynamicFormActivity : AppCompatActivity() {
 
         return et
     }
-    // 2. YA / TIDAK (Chip Merah & Hijau Kustom)
+    // --- 2. YA / TIDAK (Diperbaiki Icon dan Teksnya agar Rapi & Rata Tengah) ---
     private fun createYesNoLayout(): RadioGroup {
+        val scale = resources.displayMetrics.density
         val rg = RadioGroup(this)
         rg.orientation = LinearLayout.HORIZONTAL
-        rg.weightSum = 2f // Agar terbagi rata 50:50
 
-        // Tombol TIDAK (Kiri - Merah)
+        // Layout Parameters dihapus marginnya karena sudah diatur oleh Container
+        rg.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        // Definisi Warna
+        val colorGrayText = Color.parseColor("#6B7280")
+        val colorWhite = Color.WHITE
+        val colorRed = Color.parseColor("#EF4444")
+        val colorGreen = Color.parseColor("#10B981")
+        val colorBorder = Color.parseColor("#E5E7EB")
+
+        val buttonHeight = (46 * scale).toInt()
+
+        // =========================================================
+        // HELPER SAKTI: Untuk me-resize Icon agar tidak raksasa
+        // dan bisa diubah warnanya (Putih saat diklik, Abu saat normal)
+        // =========================================================
+        fun getScaledIcon(iconId: Int, color: Int): android.graphics.drawable.Drawable? {
+            val drawable = ContextCompat.getDrawable(this, iconId)?.mutate()
+            drawable?.setTint(color) // Beri warna pada icon
+            val sizePx = (18 * scale).toInt() // Kunci ukurannya di 18dp agar mungil & rapi
+            drawable?.setBounds(0, 0, sizePx, sizePx)
+            return drawable
+        }
+
+        // ================= TOMBOL TIDAK =================
         val rbNo = RadioButton(this)
-        rbNo.text = "Tidak / Rusak"
+        rbNo.text = "Tidak"
         rbNo.id = View.generateViewId()
-        rbNo.buttonDrawable = null // Hapus bulatan radio default
+        rbNo.buttonDrawable = null
         rbNo.gravity = Gravity.CENTER
-        rbNo.setTextColor(Color.BLACK)
-        // Pastikan Anda sudah membuat file drawable/selector_chip_no.xml
-        rbNo.background = ContextCompat.getDrawable(this, R.drawable.selector_chip_no)
+        rbNo.setTextColor(colorGrayText)
+        rbNo.background = createButtonBackground(colorRed, colorBorder)
 
-        val paramsNo = RadioGroup.LayoutParams(0, 120) // Tinggi fix
+        // Pasang icon yang sudah di-resize pakai helper di atas
+        rbNo.setCompoundDrawables(getScaledIcon(R.drawable.ic_close, colorGrayText), null, null, null)
+        rbNo.compoundDrawablePadding = (8 * scale).toInt() // Jarak spasi antara icon dan teks
+
+        val paramsNo = RadioGroup.LayoutParams(0, buttonHeight)
         paramsNo.weight = 1f
-        paramsNo.setMargins(0, 0, 16, 0) // Jarak kanan
+        paramsNo.marginEnd = (12 * scale).toInt() // Jarak pemisah di tengah
         rbNo.layoutParams = paramsNo
 
-        // Tombol YA (Kanan - Hijau)
+        // PENTING: Atur padding kiri (32dp) agar icon terdorong ke tengah, tidak nempel di pinggir!
+        rbNo.setPadding((32 * scale).toInt(), 0, (16 * scale).toInt(), 0)
+
+        // ================= TOMBOL YA =================
         val rbYes = RadioButton(this)
-        rbYes.text = "Ya / Baik"
+        rbYes.text = "Ya"
         rbYes.id = View.generateViewId()
         rbYes.buttonDrawable = null
         rbYes.gravity = Gravity.CENTER
-        rbYes.setTextColor(Color.BLACK)
-        // Pastikan Anda sudah membuat file drawable/selector_chip_yes.xml
-        rbYes.background = ContextCompat.getDrawable(this, R.drawable.selector_chip_yes)
+        rbYes.setTextColor(colorGrayText)
+        rbYes.background = createButtonBackground(colorGreen, colorBorder)
 
-        val paramsYes = RadioGroup.LayoutParams(0, 120)
+        // Pasang icon yang sudah di-resize
+        rbYes.setCompoundDrawables(getScaledIcon(R.drawable.ic_check, colorGrayText), null, null, null)
+        rbYes.compoundDrawablePadding = (8 * scale).toInt()
+
+        val paramsYes = RadioGroup.LayoutParams(0, buttonHeight)
         paramsYes.weight = 1f
         rbYes.layoutParams = paramsYes
 
-        // Logic Ganti Warna Teks saat diklik (Agar kontras dengan background)
-        rg.setOnCheckedChangeListener { group, checkedId ->
+        // Atur padding kiri (32dp) sama seperti tombol Tidak
+        rbYes.setPadding((32 * scale).toInt(), 0, (16 * scale).toInt(), 0)
+
+        // ================= LOGIKA KLIK =================
+        rg.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId == rbNo.id) {
-                // Jika pilih Tidak (Merah)
-                rbNo.setTextColor(Color.WHITE)
-                rbYes.setTextColor(Color.BLACK)
+                // Jika pilih TIDAK: Teks & Icon berubah jadi Putih
+                rbNo.setTextColor(colorWhite)
+                rbNo.setCompoundDrawables(getScaledIcon(R.drawable.ic_close, colorWhite), null, null, null)
+
+                // Tombol YA kembali ke warna Normal (Abu-abu)
+                rbYes.setTextColor(colorGrayText)
+                rbYes.setCompoundDrawables(getScaledIcon(R.drawable.ic_check, colorGrayText), null, null, null)
+
             } else if (checkedId == rbYes.id) {
-                // Jika pilih Ya (Hijau)
-                rbYes.setTextColor(Color.WHITE)
-                rbNo.setTextColor(Color.BLACK)
+                // Jika pilih YA: Teks & Icon berubah jadi Putih
+                rbYes.setTextColor(colorWhite)
+                rbYes.setCompoundDrawables(getScaledIcon(R.drawable.ic_check, colorWhite), null, null, null)
+
+                // Tombol TIDAK kembali ke warna Normal (Abu-abu)
+                rbNo.setTextColor(colorGrayText)
+                rbNo.setCompoundDrawables(getScaledIcon(R.drawable.ic_close, colorGrayText), null, null, null)
             }
         }
 
         rg.addView(rbNo)
         rg.addView(rbYes)
         return rg
+    }
+
+    // --- FUNGSI BANTUAN BACKGROUND TOMBOL ---
+    private fun createButtonBackground(selectedColor: Int, borderColor: Int): android.graphics.drawable.StateListDrawable {
+        val stateList = android.graphics.drawable.StateListDrawable()
+        val scale = resources.displayMetrics.density
+
+        // Normal (Putih + Garis Abu)
+        val normalShape = android.graphics.drawable.GradientDrawable().apply {
+            shape = android.graphics.drawable.GradientDrawable.RECTANGLE
+            cornerRadius = 8f * scale // Sudut membulat sedikit (bukan kapsul)
+            setColor(Color.WHITE)
+            setStroke(2, borderColor)
+        }
+
+        // Dipilih (Warna Solid Hijau/Merah)
+        val checkedShape = android.graphics.drawable.GradientDrawable().apply {
+            shape = android.graphics.drawable.GradientDrawable.RECTANGLE
+            cornerRadius = 8f * scale
+            setColor(selectedColor)
+        }
+
+        stateList.addState(intArrayOf(android.R.attr.state_checked), checkedShape)
+        stateList.addState(intArrayOf(-android.R.attr.state_checked), normalShape)
+
+        return stateList
     }
 
     // 3. PILIHAN (Chip Vertical Biru)

@@ -42,14 +42,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSimpan"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="24dp"
-                android:text="SIMPAN JAWABAN"
-                android:backgroundTint="#4CAF50"
-                android:textStyle="bold" />
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="24dp"
+                android:text="Simpan"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                app:backgroundTint="@null"
+                android:background="@drawable/blue_gradient"
+                app:iconGravity="textEnd"
+                app:iconPadding="8dp"
+                app:iconTint="@android:color/white"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
