@@ -46,6 +46,10 @@ class CategoryAdapter(
             "sld" -> R.drawable.sld
             "acpdb" -> R.drawable.acpdb
             "dcpdb" -> R.drawable.dcpdb
+            "uji batere" -> R.drawable.ujibatere
+            "environment" -> R.drawable.environment
+            "data perangkat" -> R.drawable.dataperangkat
+            "dokumentasi pop" -> R.drawable.dokumentasipop
             else -> R.drawable.ceklistt
         }
 
